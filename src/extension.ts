@@ -11,7 +11,7 @@ let originalWorkspaceColors: any | undefined;
 let lastAppliedKey: string | undefined;
 
 // 連続イベントのデバウンス用
-let applyTimer: NodeJS.Timeout | undefined;
+let applyTimer: ReturnType<typeof setTimeout> | undefined;
 
 export function activate(context: vscode.ExtensionContext) {
   // 起動時の元色を保持（workspace スコープの colorCustomizations）
