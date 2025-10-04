@@ -1,71 +1,93 @@
-# workspace-colorizer README
+# Workspace Colorizer
 
-This is the README for your extension "workspace-colorizer". After writing up a brief description, we recommend including the following sections.
+**Workspace Colorizer** は、開いているファイルが属する **ワークスペースフォルダごとに VS Code のタイトルバー／ステータスバーの色を自動で切り替える拡張機能** です。
 
-## Features
+マルチルートワークスペースで複数プロジェクトを同時に扱う場合に、
+どのフォルダを操作しているのかを **色で即座に判別** できます。
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+## 主な機能
 
-For example if there is an image subfolder under your extension project workspace:
+- アクティブなファイルの **所属フォルダごとに色を変更**
+- 設定で **フォルダ名や正規表現** を使って色を指定可能
+- ステータスバーの色も同時に変更（オプション）
+- フォルダが設定されていない場合は **自動的に VS Code 本来の色に戻る**
+- コマンドパレットから **「Workspace Colorizer: Reset Colors」** を実行すると
+  - 元の VS Code 設定に復帰
+  - `workspaceColorizer.folderColors` を User / Workspace 設定から削除（リセット）
 
-\!\[feature X\]\(images/feature-x.png\)
+## インストール方法
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### ① ソースから（開発・ローカル使用）
 
-## Requirements
+```bash
+git clone https://github.com/yourname/workspace-colorizer.git
+cd workspace-colorizer
+npm install
+npm run build
+```
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+### ② VSIX ファイルから
 
-## Extension Settings
+```bash
+vsce package
+```
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+生成された .vsix を「拡張機能パネル」 → 「（サイドバー右上の）…」 → 「Install from VSIX...」 でインストール。
 
-For example:
+## 初期設定
 
-This extension contributes the following settings:
+### 1. .code-workspace ファイルを作成し、マルチルートワークスペースを設定します
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+```json
+{
+  "folders": [
+    {
+      "path": "sample1"
+    },
+    {
+      "path": "sample2"
+    },
+    {
+      "path": "sample3"
+    },
+    {
+      "path": "api-server"
+    }
+  ]
+}
+```
 
-## Known Issues
+### 2. settings.json に下記の設定を参考に追加します
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+```json
+{
+  "window.titleBarStyle": "custom",
+  "workspaceColorizer.folderColors": {
+    "sample1": "#1E90FF",
+    "sample2": "#32CD32",
+    "sample3": "#FFD700",
+    "^api-.*": "#FF6B6B"
+  }
+}
+```
 
-## Release Notes
+- "sample1" のようにフォルダ名をキーに指定
+- ^api-.* のように正規表現キーも使用可能
+- 値は #RRGGBB 形式のカラーコード
 
-Users appreciate release notes as you update your extension.
+### 3. .code-workspace からワークスペースを開きます
 
-### 1.0.0
+ファイルを切り替えると、該当フォルダの色に即座に変化します。
 
-Initial release of ...
+未設定フォルダを開いた場合は自動的に元の VS Code テーマ色に戻ります。
 
-### 1.0.1
+## リセット
 
-Fixed issue #.
+コマンドパレットを開き、`Workspace Colorizer: Reset Colors` を実行します。
 
-### 1.1.0
+`workspaceColorizer.folderColors` を settings.json から削除し、VS Code の元の色に戻します。
 
-Added features X, Y, and Z.
+## ライセンス
 
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+MIT License
+© 2025 Ryosuke
