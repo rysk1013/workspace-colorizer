@@ -1,12 +1,15 @@
 {
   "name": "workspace-colorizer",
   "displayName": "Workspace Colorizer",
+  "description": "Change title/status bar color based on the workspace folder of the active file.",
   "publisher": "yourname",
-  "version": "0.0.1",
-  "engines": {
-    "vscode": "^1.93.0"
-  },
-  "activationEvents": ["onStartupFinished"],
+  "version": "0.2.0",
+  "engines": { "vscode": "^1.93.0" },
+  "categories": ["Other"],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:workspaceColorizer.reset"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -25,12 +28,19 @@
             "sample2": "#32CD32",
             "sample3": "#FFD700"
           },
-          "markdownDescription": "ワークスペース内フォルダ名（または正規表現）→ タイトルバー色（#RRGGBB）。最初にマッチしたエントリが使われます。"
+          "markdownDescription": "Map of workspace folder name (or RegExp) to color (#RRGGBB). The first matched entry wins."
         },
         "workspaceColorizer.statusBarSync": {
           "type": "boolean",
           "default": true,
-          "description": "タイトルバーと同じ色を Status Bar にも適用する"
+          "description": "Apply the same color to the Status Bar."
+        },
+        "workspaceColorizer.debounceMs": {
+          "type": "integer",
+          "default": 80,
+          "minimum": 0,
+          "maximum": 1000,
+          "description": "Debounce time in milliseconds to smooth rapid editor/folder changes."
         }
       }
     }
@@ -38,12 +48,12 @@
   "scripts": {
     "vscode:prepublish": "npm run build",
     "build": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
+    "watch": "tsc -w -p ./",
     "package": "vsce package"
   },
   "devDependencies": {
     "@types/vscode": "^1.93.0",
-    "typescript": "^5.6.3",
-    "@vscode/test-electron": "^2.4.1"
+    "@vscode/test-electron": "^2.4.1",
+    "typescript": "^5.6.3"
   }
 }
